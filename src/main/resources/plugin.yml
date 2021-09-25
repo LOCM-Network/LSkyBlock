@@ -1,0 +1,5 @@
+name: LSkyBlock
+main: me.locm.lskyblock.LSkyblock
+version: "1.0.0"
+author: LocmTeam
+api: ["1.0.0"]

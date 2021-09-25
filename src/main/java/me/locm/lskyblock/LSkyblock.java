@@ -12,6 +12,7 @@ public class LSkyblock extends PluginBase {
     @Override
     public void onLoad(){
         instance = this;
+        saveDefaultConfig();
         Generator.addGenerator(IslandGenerator.class, "skyblock", 3);
         getServer().getCommandMap().register("LSkyblock", new SkyblockCommand());
         getServer().getPluginManager().registerEvents(new EventListener(), this);

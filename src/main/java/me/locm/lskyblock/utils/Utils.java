@@ -3,22 +3,19 @@ package me.locm.lskyblock.utils;
 import cn.nukkit.Server;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
-import me.locm.lskyblock.generator.IslandGenerator;
 
 public class Utils {
 
-    public static Position getDefaultSpawn(int is){
-        int skyBlockLevelNum = is / 1000000;
-        int x = ((((is % 1000000) / 1000) + 1) * 20 - 20) * 16 + 8;
-        int z = (((is % 1000000) % 1000) * 20 - 20) * 16 + 8;
-        Level level = Server.getInstance().getLevelByName("skyblock" + skyBlockLevelNum);
-        if (level == null) {
-            if (!Server.getInstance().loadLevel("skyblock" + skyBlockLevelNum)) {
-                Server.getInstance().generateLevel("skyblock" + skyBlockLevelNum, 0, IslandGenerator.class);
-            }
-            level = Server.getInstance().getLevelByName("skyblock" + skyBlockLevelNum);
-        }
+    public static Position stringToPos(String string){
+        String[] parts = string.split(":");
+        double x = Double.parseDouble(parts[0]);
+        double y = Double.parseDouble(parts[1]);
+        double z = Double.parseDouble(parts[2]);
+        Level level = Server.getInstance().getLevelByName(parts[3]);
+        return new Position(x, y, z, level);
+    }
 
-        return new Position(x, 13, z, level);
+    public static String posToString(Position pos){
+        return pos.x + ":" + pos.y + ":" + pos.z + ":" + pos.getLevel().getName();
     }
 }

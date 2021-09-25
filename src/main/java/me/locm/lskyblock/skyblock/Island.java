@@ -3,19 +3,27 @@ package me.locm.lskyblock.skyblock;
 import cn.nukkit.Player;
 import cn.nukkit.level.Position;
 import lombok.Getter;
+import lombok.Setter;
+import me.locm.lskyblock.utils.Caculator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+@Getter
+@Setter
 public class Island {
 
-    @Getter
+    private int id;
     private String owner;
+    private Position spawn;
+    private List<String> members;
+    private boolean pvp;
 
     public Island(String player){
         this.owner = player;
+    }
+
+    public boolean getPvp(){
+        return pvp;
     }
 
     public boolean addMember(Player player){
@@ -30,25 +38,13 @@ public class Island {
         return true;
     }
 
-    public void setSettings(){
+    public void setSettings(){}
 
+    public boolean isInside(Position pos){
+        Position start = Caculator.getStartPosById(getId());
+        Position end = Caculator.getEndPosById(getId());
+        IslandArea area = new IslandArea(start, end);
+        return area.isInside(pos);
     }
 
-    public void setSpawn(){
-
-    }
-
-    public List<String> getMembers(){
-        List<String> members = new ArrayList<String>();
-        return members;
-    }
-
-    public Map<String, String> getSettings(){
-        Map<String, String> settings = new HashMap<>();
-        return settings;
-    }
-
-    public Position getSpawn(){
-        return new Position();
-    }
 }

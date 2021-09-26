@@ -18,15 +18,7 @@ public class FormStorage {
 
     public static SimpleForm getStartForm(){
         SimpleForm form = new SimpleForm(TextFormat.colorize("SKYBLOCK"));
-        form.addButton(TextFormat.colorize("dich chuyen"), (p, button) -> {
-            Position spawn = SkyBlockAPI.getIsland(p).getSpawn();
-            if(spawn != null){
-                p.teleport(spawn);
-                p.sendActionBar(TextFormat.colorize("Dang dich chuyen den dao"));
-                return;
-            }
-            p.sendActionBar("Da xay ra loi");
-        });
+        form.addButton(TextFormat.colorize("dich chuyen"), (p, button) -> sendTeleportForm(p));
         form.addButton(TextFormat.colorize("Quan ly dao"), (p, button) -> sendManagerForm(p));
         return form;
     }
@@ -59,6 +51,7 @@ public class FormStorage {
                 }else getStartForm().send(cp);
             });
         });
+        form.send(player);
     }
 
     public static void sendManagerForm(Player player){

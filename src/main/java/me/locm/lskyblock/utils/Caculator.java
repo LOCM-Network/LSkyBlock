@@ -28,4 +28,8 @@ public class Caculator {
         }
         return new Position(x, 13, z, level);
     }
+
+    public static int getTickByLevel(int level){
+        return 15 - level;
+    }
 }

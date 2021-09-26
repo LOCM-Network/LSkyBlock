@@ -1,6 +1,7 @@
 package me.locm.lskyblock.utils;
 
 import cn.nukkit.Server;
+import cn.nukkit.block.Block;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
@@ -9,6 +10,7 @@ import me.locm.lskyblock.LSkyblock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Utils {
 
@@ -40,5 +42,32 @@ public class Utils {
             items.add(item);
         }
         return items;
+    }
+
+    public static Block getRandomBlockByLevel(int level){
+        List<Block> blocks = new ArrayList<Block>();
+        //ore
+        blocks.add(Block.get(Block.COBBLE));
+        blocks.add(Block.get(Block.STONE));
+        blocks.add(Block.get(Block.COAL_ORE));
+        blocks.add(Block.get(Block.IRON_ORE));
+        blocks.add(Block.get(Block.LAPIS_ORE));
+        blocks.add(Block.get(Block.REDSTONE_ORE));
+        blocks.add(Block.get(Block.GOLD_ORE));
+        blocks.add(Block.get(Block.DIAMOND_ORE));
+        blocks.add(Block.get(Block.EMERALD_ORE));
+        //block
+        blocks.add(Block.get(Block.COAL_BLOCK));
+        blocks.add(Block.get(Block.IRON_BLOCK));
+        blocks.add(Block.get(Block.LAPIS_BLOCK));
+        blocks.add(Block.get(Block.REDSTONE_BLOCK));
+        blocks.add(Block.get(Block.GOLD_BLOCK));
+        blocks.add(Block.get(Block.IRON_BLOCK));
+        blocks.add(Block.get(Block.GOLD_BLOCK));
+        blocks.add(Block.get(Block.EMERALD_BLOCK));
+        blocks.add(Block.get(Block.DIAMOND_BLOCK));
+
+        Random rd = new Random();
+        return blocks.get(rd.nextInt(level));
     }
 }

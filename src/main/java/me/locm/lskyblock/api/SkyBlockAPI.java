@@ -1,7 +1,9 @@
 package me.locm.lskyblock.api;
 
 import cn.nukkit.Player;
+import cn.nukkit.Server;
 import cn.nukkit.level.Position;
+import me.locm.lskyblock.event.PlayerCreateIslandEvent;
 import me.locm.lskyblock.provider.SQLiteProvider;
 import me.locm.lskyblock.provider.YamlProvider;
 import me.locm.lskyblock.skyblock.Island;
@@ -27,6 +29,7 @@ public class SkyBlockAPI { //TODO
         if(!hasIsland(player)){
             //TODO: create island
             addIsland(player);
+            Server.getInstance().getPluginManager().callEvent(new PlayerCreateIslandEvent(player));
             return true;
         }
         return false;

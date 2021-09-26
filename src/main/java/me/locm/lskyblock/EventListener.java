@@ -10,16 +10,25 @@ import cn.nukkit.event.player.PlayerBucketEmptyEvent;
 import cn.nukkit.event.player.PlayerBucketFillEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerLocallyInitializedEvent;
+import cn.nukkit.item.Item;
 import cn.nukkit.utils.TextFormat;
 import me.locm.lskyblock.api.SkyBlockAPI;
 import me.locm.lskyblock.event.PlayerCreateIslandEvent;
 import me.locm.lskyblock.skyblock.Island;
+import me.locm.lskyblock.utils.Utils;
+
+import java.util.List;
 
 public class EventListener implements Listener {
 
     @EventHandler
     public void onIslandCreate(PlayerCreateIslandEvent event){
         Player player = event.getPlayer();
+        List<Item> items = Utils.getIslandItem();
+        for(Item item : items){
+            player.getInventory().addItem(item);
+        }
+        player.sendMessage(TextFormat.colorize("Do khoi dau da duoc them vao tui"));
     }
 
     @EventHandler

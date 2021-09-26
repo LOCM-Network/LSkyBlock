@@ -2,13 +2,22 @@ package me.locm.lskyblock.provider;
 
 import cn.nukkit.Player;
 import lombok.Getter;
+import me.locm.lskyblock.LSkyblock;
 import me.locm.lskyblock.skyblock.Island;
 import me.locm.lskyblock.utils.Utils;
+import ru.nukkit.dblib.DbLib;
 
+import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SQLiteProvider {
+
+    public SQLiteProvider(){
+
+    }
 
     public Island getIsland(String player){
         Island island =  new Island(player);
@@ -48,4 +57,32 @@ public class SQLiteProvider {
         //members: players
         //pvp-mod: 0(disable <default> ), 1(enable)
     }
+
+    public static Connection connectToSQLite() throws SQLException {
+        return connectToSQLite("databases.db");
+    }
+
+    public static Connection connectToSQLite(String filename) throws SQLException {
+        File file = new File(LSkyblock.getInstance().getDataFolder() + File.separator + filename);
+        Connection connection = DbLib.getSQLiteConnection(file);
+        return connection;
+    }
+
+    public static boolean executeUpdate(String query) throws SQLException {
+        Connection connection = connectToSQLite();
+        if (connection == null) return false;
+        connection.createStatement().executeUpdate(query);
+        if (connection != null) connection.close();
+        return true;
+    }
+
+    public static void create() throws SQLException {
+        try{
+            String query = "create table if not exists lskyblock (id int, name varchar(20), members text, pvp int)";
+            executeUpdate(query);
+        }catch(SQLException ecp){
+            System.out.println(ecp);
+        }
+    }
+
 }

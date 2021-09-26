@@ -10,21 +10,23 @@ import me.locm.lskyblock.skyblock.Island;
 public class SkyBlockAPI { //TODO
 
     public static boolean hasIsland(Player player){
+
         return true;
     }
 
     public static Island getIsland(Player player){
         if(hasIsland(player)){
-            return new Island(player.getName());
+            return new SQLiteProvider().getIsland(player.getName());
         }
         //create island if not exist
-        createIsland(player);
-        return getIsland(player);
+        if(createIsland(player)) return getIsland(player);
+        return null;
     }
 
     public static boolean createIsland(Player player){
         if(!hasIsland(player)){
             //TODO: create island
+            addIsland(player);
             return true;
         }
         return false;

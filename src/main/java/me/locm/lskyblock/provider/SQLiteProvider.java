@@ -16,7 +16,9 @@ import java.util.List;
 public class SQLiteProvider {
 
     public SQLiteProvider(){
-
+        try{
+            create();
+        }catch (SQLException e){}
     }
 
     public Island getIsland(String player){

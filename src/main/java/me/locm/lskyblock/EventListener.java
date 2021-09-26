@@ -9,6 +9,8 @@ import cn.nukkit.event.block.ItemFrameDropItemEvent;
 import cn.nukkit.event.player.PlayerBucketEmptyEvent;
 import cn.nukkit.event.player.PlayerBucketFillEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
+import cn.nukkit.event.player.PlayerLocallyInitializedEvent;
+import cn.nukkit.utils.TextFormat;
 import me.locm.lskyblock.api.SkyBlockAPI;
 import me.locm.lskyblock.event.PlayerCreateIslandEvent;
 import me.locm.lskyblock.skyblock.Island;
@@ -18,6 +20,14 @@ public class EventListener implements Listener {
     @EventHandler
     public void onIslandCreate(PlayerCreateIslandEvent event){
         Player player = event.getPlayer();
+    }
+
+    @EventHandler
+    public void onJoin(PlayerLocallyInitializedEvent event){
+        Player player = event.getPlayer();
+        if(SkyBlockAPI.createIsland(player)){
+            player.sendMessage(TextFormat.colorize("&eDao cua ban da duoc tao, /island de dich chuyen toi"));
+        }
     }
 
     @EventHandler

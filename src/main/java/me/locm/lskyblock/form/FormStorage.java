@@ -80,7 +80,7 @@ public class FormStorage {
         CustomForm form = new CustomForm(TextFormat.colorize("Members"));
         form.addElement("add", new Toggle(TextFormat.colorize("Xoa/Them"), true));
         form.addElement("target", new Input(TextFormat.colorize("Nhap ten")));
-        form.setNoneHandler((p) -> sendManagerForm(p));
+        form.setNoneHandler(FormStorage::sendManagerForm);
         form.setHandler((p, respone) -> {
             boolean add = respone.getToggle("add").getValue();
             String target = respone.getInput("target").getValue();

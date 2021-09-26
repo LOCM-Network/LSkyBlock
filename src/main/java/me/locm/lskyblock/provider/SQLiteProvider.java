@@ -18,12 +18,6 @@ import java.util.Map;
 
 public class SQLiteProvider {
 
-    public SQLiteProvider(){
-        try{
-            create();
-        }catch (SQLException ignored){}
-    }
-
     public Island getIsland(String player) throws SQLException {
         Map<String, String> data = selectAllFormPlayer(player);
         Island island =  new Island(player);
@@ -41,7 +35,7 @@ public class SQLiteProvider {
         try{
             Map<String, String> data = selectAllFormPlayer(player);
             assert data != null;
-            has = (data.get("id") == null);
+            has = !(data.get("id") == null);
         }catch (SQLException ignored){}
         return has;
     }
@@ -132,7 +126,6 @@ public class SQLiteProvider {
             list.put("members", resultSet.getString("members"));
             list.put("pvpmode", resultSet.getString("pvp"));
         }
-        connection.close();
         return list;
     }
 
@@ -142,7 +135,6 @@ public class SQLiteProvider {
         if (connection == null) return "";
         ResultSet resultSet = connection.createStatement().executeQuery(query);
         if (resultSet == null) return null;
-        connection.close();
         return resultSet.getString(component);
     }
 
@@ -150,12 +142,11 @@ public class SQLiteProvider {
         Connection connection = connectToSQLite();
         if (connection == null) return;
         connection.createStatement().executeUpdate(query);
-        connection.close();
     }
 
     public static void create() throws SQLException {
         try{
-            String query = "create table if not exists lskyblock (id int, name varchar(20), members text, pvp varchar(1))";
+            String query = "create table if not exists lskyblock (id varchar(20), player varchar(20), members text, pvp varchar(1))";
             executeUpdate(query);
         }catch(SQLException ignored){}
     }

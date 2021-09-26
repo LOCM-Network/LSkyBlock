@@ -15,8 +15,7 @@ import java.sql.SQLException;
 public class SkyBlockAPI { //TODO
 
     public static boolean hasIsland(Player player){
-
-        return true;
+        return new SQLiteProvider().hasIsland(player.getName());
     }
 
     public static Island getIsland(Player player) throws SQLException {

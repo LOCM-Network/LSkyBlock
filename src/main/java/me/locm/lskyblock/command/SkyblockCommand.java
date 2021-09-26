@@ -8,7 +8,7 @@ import me.locm.lskyblock.form.FormStorage;
 public class SkyblockCommand extends Command {
 
     public SkyblockCommand(){
-        super("skyblock", "skyblock command");
+        super("skyblock", "skyblock command", "/sb", new String[]{"sb"});
     }
 
     public boolean execute(CommandSender sender, String label, String[] args){

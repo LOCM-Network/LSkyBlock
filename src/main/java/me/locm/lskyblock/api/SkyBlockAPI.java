@@ -3,10 +3,13 @@ package me.locm.lskyblock.api;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.level.Position;
+import me.locm.lskyblock.LSkyblock;
 import me.locm.lskyblock.event.PlayerCreateIslandEvent;
 import me.locm.lskyblock.provider.SQLiteProvider;
 import me.locm.lskyblock.provider.YamlProvider;
 import me.locm.lskyblock.skyblock.Island;
+
+import java.sql.SQLException;
 
 
 public class SkyBlockAPI { //TODO
@@ -16,7 +19,7 @@ public class SkyBlockAPI { //TODO
         return true;
     }
 
-    public static Island getIsland(Player player){
+    public static Island getIsland(Player player) throws SQLException {
         if(hasIsland(player)){
             return new SQLiteProvider().getIsland(player.getName());
         }
@@ -25,9 +28,10 @@ public class SkyBlockAPI { //TODO
         return null;
     }
 
-    public static boolean createIsland(Player player){
+    public static boolean createIsland(Player player) throws SQLException {
         if(!hasIsland(player)){
-            //TODO: create island
+            new SQLiteProvider().createIsland(player.getName(),
+                    LSkyblock.getInstance().getConfig().getInt("islands"));
             addIsland(player);
             Server.getInstance().getPluginManager().callEvent(new PlayerCreateIslandEvent(player));
             return true;

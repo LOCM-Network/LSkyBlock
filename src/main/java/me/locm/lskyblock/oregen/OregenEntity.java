@@ -1,7 +1,6 @@
 package me.locm.lskyblock.oregen;
 
 import cn.nukkit.block.Block;
-import cn.nukkit.blockentity.BlockEntity;
 import cn.nukkit.blockentity.BlockEntitySpawnable;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;

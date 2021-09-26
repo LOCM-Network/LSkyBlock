@@ -12,21 +12,34 @@ import ru.contentforge.formconstructor.form.SimpleForm;
 import ru.contentforge.formconstructor.form.element.Input;
 import ru.contentforge.formconstructor.form.element.Toggle;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 public class FormStorage {
 
     public static SimpleForm getStartForm(){
         SimpleForm form = new SimpleForm(TextFormat.colorize("SKYBLOCK"));
         form.addButton(TextFormat.colorize("dich chuyen"), (p, button) -> sendTeleportForm(p));
-        form.addButton(TextFormat.colorize("Quan ly dao"), (p, button) -> sendManagerForm(p));
+        form.addButton(TextFormat.colorize("Quan ly dao"), (p, button) -> {
+            try {
+                sendManagerForm(p);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
         return form;
     }
 
     public static void sendTeleportForm(Player player){
         SimpleForm form = new SimpleForm(TextFormat.colorize("teleport"));
         form.addButton(TextFormat.colorize("Dich chuyen den dao cua ban"), (p, button) -> {
-            Position spawn = SkyBlockAPI.getIsland(p).getSpawn();
+            Position spawn = null;
+            try {
+                spawn = Objects.requireNonNull(SkyBlockAPI.getIsland(p)).getSpawn();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             if(spawn != null){
                 p.teleport(spawn);
                 p.sendActionBar(TextFormat.colorize("Dang dich chuyen den dao"));
@@ -40,33 +53,48 @@ public class FormStorage {
             cform.setHandler((cp, response) -> {
                 String name = response.getInput("name").getValue();
                 if(!name.equals("")){
-                    Island island = new SQLiteProvider().getIsland(name);
+                    Island island = null;
+                    try {
+                        island = new SQLiteProvider().getIsland(name);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                     if(island != null){
                         p.teleport(island.getSpawn());
                         p.sendActionBar(TextFormat.colorize(
                                 "Dich chuyen toi dao cua " + island.getOwner() + "\n" +
                                             "Trang thai PVP: " + (island.getPvp() ? "Bat" : "Tat")
                         ));
-                    }
+                    }else p.sendMessage(TextFormat.colorize("Nguoi choi " + name + " khong ton tai"));
                 }else getStartForm().send(cp);
             });
         });
         form.send(player);
     }
 
-    public static void sendManagerForm(Player player){
+    public static void sendManagerForm(Player player) throws SQLException {
         Island island = new SQLiteProvider().getIsland(player.getName());
         SimpleForm form = new SimpleForm(TextFormat.colorize("quan ly dao"));
-        form.addButton(TextFormat.colorize("Thong tin dao"), (p, button) -> sendInfoForm(p));
+        form.addButton(TextFormat.colorize("Thong tin dao"), (p, button) -> {
+            try {
+                sendInfoForm(p);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
         form.addButton(TextFormat.colorize("Xoa/Them ban be"), (p, button) -> sendMemberForm(p));
         form.addButton((island.getPvp() ? "&a" : "&c") + TextFormat.colorize("PVP"), (p, button) -> {
             island.setPvp(!island.getPvp());
-            sendManagerForm(p);
+            try {
+                sendManagerForm(p);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         });
         form.send(player);
     }
 
-    public static void sendInfoForm(Player player){
+    public static void sendInfoForm(Player player) throws SQLException {
         Island island = new SQLiteProvider().getIsland(player.getName());
         CustomForm form = new CustomForm(TextFormat.colorize("Information"));
         form.addElement(TextFormat.colorize("ID: " + island.getId()));
@@ -80,20 +108,26 @@ public class FormStorage {
         CustomForm form = new CustomForm(TextFormat.colorize("Members"));
         form.addElement("add", new Toggle(TextFormat.colorize("Xoa/Them"), true));
         form.addElement("target", new Input(TextFormat.colorize("Nhap ten")));
-        form.setNoneHandler(FormStorage::sendManagerForm);
         form.setHandler((p, respone) -> {
             boolean add = respone.getToggle("add").getValue();
             String target = respone.getInput("target").getValue();
-            Island island = new SQLiteProvider().getIsland(player.getName());
+            Island island = null;
+            try {
+                island = new SQLiteProvider().getIsland(player.getName());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             if(!target.equals("")){
                 Player targetp = Server.getInstance().getPlayerExact(target);
                 if(add){
                     if(targetp != null){
+                        assert island != null;
                         island.addMember(targetp);
                         sendNotice(player, "da them " + targetp.getName() + " vao dao");
                     }
                 }else{
                     if(targetp != null){
+                        assert island != null;
                         island.removeMember(targetp);
                         sendNotice(player, "da xoa " + targetp.getName() + " ra khoi dao");
                     }

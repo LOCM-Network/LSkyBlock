@@ -9,6 +9,7 @@ import cn.nukkit.utils.TextFormat;
 import me.locm.lskyblock.LSkyblock;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -28,7 +29,7 @@ public class Utils {
     }
 
     public static List<Item> getIslandItem(){
-        List<Item> items = new ArrayList<Item>();
+        List<Item> items = new ArrayList<>();
         List<String> stritem = LSkyblock.getInstance().getConfig().getStringList("items");
         for(String string : stritem){
             String[] parts = string.split(":");
@@ -45,7 +46,7 @@ public class Utils {
     }
 
     public static Block getRandomBlockByLevel(int level){
-        List<Block> blocks = new ArrayList<Block>();
+        List<Block> blocks = new ArrayList<>();
         //ore
         blocks.add(Block.get(Block.COBBLE));
         blocks.add(Block.get(Block.STONE));
@@ -69,5 +70,10 @@ public class Utils {
 
         Random rd = new Random();
         return blocks.get(rd.nextInt(level));
+    }
+
+    public static List<String> stringToList(String string){
+        String[] parts = string.split(",");
+        return new ArrayList<>(Arrays.asList(parts));
     }
 }

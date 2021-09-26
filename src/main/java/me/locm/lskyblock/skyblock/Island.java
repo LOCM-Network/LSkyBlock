@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.level.Position;
 import lombok.Getter;
 import lombok.Setter;
+import me.locm.lskyblock.provider.SQLiteProvider;
 import me.locm.lskyblock.utils.Caculator;
 
 import java.util.List;
@@ -26,19 +27,17 @@ public class Island {
         return pvp;
     }
 
-    public boolean addMember(Player player){
-        return true;
+    public void addMember(Player player){
+        new SQLiteProvider().addMember(this, player.getName());
     }
 
-    public boolean removeMember(Player player){
-        return true;
+    public void removeMember(Player player){
+        new SQLiteProvider().removeMember(this, player.getName());
     }
 
     public boolean isMember(Player player){
-        return true;
+        return members.contains(player.getName());
     }
-
-    public void setSettings(){}
 
     public boolean isInside(Position pos){
         Position start = Caculator.getStartPosById(getId());

@@ -33,10 +33,7 @@ public class OregenEntity extends BlockEntitySpawnable {
                 .putInt("x", (int) this.x)
                 .putInt("y", (int) this.y)
                 .putInt("z", (int) this.z)
-                .putString("Lock", this.namedTag.getString("Lock"))
-                .putInt("Levels", this.namedTag.getInt("Levels"))
-                .putInt("primary", this.namedTag.getInt("Primary"))
-                .putInt("secondary", this.namedTag.getInt("Secondary"));
+                .putInt("levelgen", this.level);
     }
 
     @Override

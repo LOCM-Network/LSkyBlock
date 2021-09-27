@@ -102,7 +102,7 @@ public class SQLiteProvider {
         while (resultSet.next()) {
             Island island = new Island(resultSet.getString("player"));
             island.setId(Integer.parseInt(resultSet.getString("id")));
-            island.setMembers(Utils.stringToList(resultSet.getString("mebers")));
+            island.setMembers(Utils.stringToList(resultSet.getString("members")));
             island.setPvp(resultSet.getString("pvp").equals("1"));
         }
         return islands;

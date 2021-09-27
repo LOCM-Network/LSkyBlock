@@ -19,9 +19,9 @@ import java.util.Objects;
 public class FormStorage {
 
     public static SimpleForm getStartForm(){
-        SimpleForm form = new SimpleForm(TextFormat.colorize("SKYBLOCK"));
-        form.addButton(TextFormat.colorize("dich chuyen"), (p, button) -> sendTeleportForm(p));
-        form.addButton(TextFormat.colorize("Quan ly dao"), (p, button) -> {
+        SimpleForm form = new SimpleForm(TextFormat.colorize("§e§lLOCM §aSKYBLOCK"));
+        form.addButton(TextFormat.colorize("§l§8DỊCH CHUYỂN VỀ ĐẢO"), (p, button) -> sendTeleportForm(p));
+        form.addButton(TextFormat.colorize("§l§8QUẢN LÍ ĐẢO"), (p, button) -> {
             try {
                 sendManagerForm(p);
             } catch (SQLException e) {
@@ -32,8 +32,8 @@ public class FormStorage {
     }
 
     public static void sendTeleportForm(Player player){
-        SimpleForm form = new SimpleForm(TextFormat.colorize("teleport"));
-        form.addButton(TextFormat.colorize("Dich chuyen den dao cua ban"), (p, button) -> {
+        SimpleForm form = new SimpleForm(TextFormat.colorize("§e§lLOCM §aSKYBLOCK"));
+        form.addButton(TextFormat.colorize("§l§8DỊCH CHUYỂN VỀ ĐẢO CỦA BẠN"), (p, button) -> {
             Position spawn = null;
             try {
                 spawn = Objects.requireNonNull(SkyBlockAPI.getIsland(p)).getSpawn();
@@ -42,14 +42,14 @@ public class FormStorage {
             }
             if(spawn != null){
                 p.teleport(spawn);
-                p.sendActionBar(TextFormat.colorize("Dang dich chuyen den dao"));
+                p.sendActionBar(TextFormat.colorize("§eĐang dịch chuyển đến đảo..."));
                 return;
             }
-            p.sendActionBar("Da xay ra loi");
+            p.sendActionBar("§cĐã xảy ra lỗi...");
         });
-        form.addButton(TextFormat.colorize("Dich chuyen toi dao khac"), (p, button) -> {
-            CustomForm cform = new CustomForm(TextFormat.colorize("TELEPORT form"));
-            cform.addElement("name", new Input("Nhap ten:"));
+        form.addButton(TextFormat.colorize("§l§8DỊCH CHUYỂN ĐẾN ĐẢO KHÁC"), (p, button) -> {
+            CustomForm cform = new CustomForm(TextFormat.colorize("§e§lLOCM §aSKYBLOCK"));
+            cform.addElement("name", new Input("§l§8NHẬP TÊN:"));
             cform.setHandler((cp, response) -> {
                 String name = response.getInput("name").getValue();
                 if(!name.equals("")){
@@ -62,10 +62,10 @@ public class FormStorage {
                     if(island != null){
                         p.teleport(island.getSpawn());
                         p.sendActionBar(TextFormat.colorize(
-                                "Dich chuyen toi dao cua " + island.getOwner() + "\n" +
-                                            "Trang thai PVP: " + (island.getPvp() ? "Bat" : "Tat")
+                                "§eĐang dịch chuyển đến đảo của " + island.getOwner() + "\n" +
+                                            "§cTrạng tháii PVP: " + (island.getPvp() ? "§aBật" : "§cTắt")
                         ));
-                    }else p.sendMessage(TextFormat.colorize("Nguoi choi " + name + " khong ton tai"));
+                    }else p.sendMessage(TextFormat.colorize("§l§cNgười chơi §e" + name + " §ckhông tồn tại!!"));
                 }else getStartForm().send(cp);
             });
         });
@@ -74,15 +74,15 @@ public class FormStorage {
 
     public static void sendManagerForm(Player player) throws SQLException {
         Island island = new SQLiteProvider().getIsland(player.getName());
-        SimpleForm form = new SimpleForm(TextFormat.colorize("quan ly dao"));
-        form.addButton(TextFormat.colorize("Thong tin dao"), (p, button) -> {
+        SimpleForm form = new SimpleForm(TextFormat.colorize("§e§lLOCM §aSKYBLOCK"));
+        form.addButton(TextFormat.colorize("§l§8THÔNG TIN ĐẢO"), (p, button) -> {
             try {
                 sendInfoForm(p);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         });
-        form.addButton(TextFormat.colorize("Xoa/Them ban be"), (p, button) -> sendMemberForm(p));
+        form.addButton(TextFormat.colorize("§l§8THÊM/XÓA BẠN"), (p, button) -> sendMemberForm(p));
         form.addButton((island.getPvp() ? "&a" : "&c") + TextFormat.colorize("PVP"), (p, button) -> {
             island.setPvp(!island.getPvp());
             try {
@@ -96,18 +96,18 @@ public class FormStorage {
 
     public static void sendInfoForm(Player player) throws SQLException {
         Island island = new SQLiteProvider().getIsland(player.getName());
-        CustomForm form = new CustomForm(TextFormat.colorize("Information"));
-        form.addElement(TextFormat.colorize("ID: " + island.getId()));
-        form.addElement(TextFormat.colorize("Dao cua nguoi choi: " + player.getName()));
+        CustomForm form = new CustomForm(TextFormat.colorize("§e§lLOCM §aSKYBLOCK"));
+        form.addElement(TextFormat.colorize("§l§8ID: §f" + island.getId()));
+        form.addElement(TextFormat.colorize("§l§8ĐẢO CỦA NGƯỜI CHƠI: §f" + player.getName()));
         List<String> members = island.getMembers();
-        form.addElement(TextFormat.colorize("Thanh vien: " + members.toString()));
-        form.addElement(TextFormat.colorize("Trang thai pvp: " + (island.getPvp() ? "bat" : "tat")));
+        form.addElement(TextFormat.colorize("§l§8THÀNH VIÊN: " + members.toString()));
+        form.addElement(TextFormat.colorize("§l§8TRẠNG THÁI PVP: " + (island.getPvp() "§aBật" : "§cTắt")));
     }
 
     public static void sendMemberForm(Player player){
-        CustomForm form = new CustomForm(TextFormat.colorize("Members"));
-        form.addElement("add", new Toggle(TextFormat.colorize("Xoa/Them"), true));
-        form.addElement("target", new Input(TextFormat.colorize("Nhap ten")));
+        CustomForm form = new CustomForm(TextFormat.colorize("§e§lLOCM §aSKYBLOCK"));
+        form.addElement("add", new Toggle(TextFormat.colorize("§l§8THÊM/XÓA BẠN"), true));
+        form.addElement("target", new Input(TextFormat.colorize("§l§8NHẬP TÊN")));
         form.setHandler((p, respone) -> {
             boolean add = respone.getToggle("add").getValue();
             String target = respone.getInput("target").getValue();
@@ -123,13 +123,13 @@ public class FormStorage {
                     if(targetp != null){
                         assert island != null;
                         island.addMember(targetp);
-                        sendNotice(player, "da them " + targetp.getName() + " vao dao");
+                        sendNotice(player, "§eĐã thêm §a§l" + targetp.getName() + "§r§e vào đảo thành công!");
                     }
                 }else{
                     if(targetp != null){
                         assert island != null;
                         island.removeMember(targetp);
-                        sendNotice(player, "da xoa " + targetp.getName() + " ra khoi dao");
+                        sendNotice(player, "§cĐã xóa §a§l" + targetp.getName() + "§r§c ra khỏi đảo thành công!");
                     }
                 }
             }else getStartForm().send(player);

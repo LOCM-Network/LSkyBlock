@@ -23,4 +23,5 @@ public class IslandArea {
         smallX = Math.min(this.start.x, this.end.x);
         return pos.z < bigZ && pos.z > smallZ && pos.x < bigX && pos.x > smallX;
     }
+
 }

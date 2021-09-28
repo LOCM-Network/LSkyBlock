@@ -11,10 +11,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SQLiteProvider {
 
@@ -51,27 +48,14 @@ public class SQLiteProvider {
     }
 
     public List<String> getMembers(Island island) throws SQLException {
-        List<String> members = new ArrayList<>();
         String memberstr = get(island.getOwner(), "members");
         assert memberstr != null;
         return Utils.stringToList(memberstr);
     }
 
-    public void addMember(Island island, String member){
-        List<String> mems = island.getMembers();
-        mems.add(member);
-        updateIsland(island);
-    }
-
-    public void removeMember(Island island, String member){
-        List<String> mems = island.getMembers();
-        mems.remove(member);
-        updateIsland(island);
-    }
-
     public void createIsland(String player, int id) throws SQLException {
         String query = "insert into lskyblock(id, player, members, pvp)" +
-                        " values ('"+id+"', '"+player+"', '', 0)";
+                        " values ('"+id+"', '"+player.toLowerCase()+"', '', '0')";
         executeUpdate(query);
     }
 
@@ -84,12 +68,13 @@ public class SQLiteProvider {
         String owner = island.getOwner();
         List<String> members = island.getMembers();
         int pvp = island.getPvp() ? 1 : 0;
-        String query =
-                "insert or replace lskyblock(id, player, members, pvpmode)" +
-                        " values ('"+id+"', '"+owner+"', '" + StringUtils.join(members, ",") + "', '"+ pvp +"')";
+        String query = "insert or replace into lskyblock(id, player, members, pvp)" +
+                        " values ('"+id+"', '"+owner.toLowerCase()+"', '" + StringUtils.join(members, ",") + "', '"+ pvp +"')";
         try{
             executeUpdate(query);
-        }catch (SQLException ignored){}
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     public static List<Island> selectAll() throws SQLException{
@@ -104,6 +89,7 @@ public class SQLiteProvider {
             island.setId(Integer.parseInt(resultSet.getString("id")));
             island.setMembers(Utils.stringToList(resultSet.getString("members")));
             island.setPvp(resultSet.getString("pvp").equals("1"));
+            islands.add(island);
         }
         return islands;
     }
@@ -114,7 +100,7 @@ public class SQLiteProvider {
     }
 
     public static Map<String, String> selectAllFormPlayer(String player) throws SQLException {
-        String query = "select * from lskyblock where player='" + player + "'";
+        String query = "select * from lskyblock where player='" + player.toLowerCase() + "'";
         Map<String, String> list = new HashMap<>();
         Connection connection = connectToSQLite();
         if (connection == null) return list;
@@ -124,13 +110,13 @@ public class SQLiteProvider {
             list.put("id", resultSet.getString("id"));
             list.put("player", player);
             list.put("members", resultSet.getString("members"));
-            list.put("pvpmode", resultSet.getString("pvp"));
+            list.put("pvp", resultSet.getString("pvp"));
         }
         return list;
     }
 
     public static String get(String player, String component) throws SQLException {
-        String query = "select * from lskyblock where player='" + player + "'";
+        String query = "select * from lskyblock where player='" + player.toLowerCase() + "'";
         Connection connection = connectToSQLite();
         if (connection == null) return "";
         ResultSet resultSet = connection.createStatement().executeQuery(query);
@@ -145,10 +131,8 @@ public class SQLiteProvider {
     }
 
     public static void create() throws SQLException {
-        try{
-            String query = "create table if not exists lskyblock (id varchar(20), player varchar(20), members text, pvp varchar(1))";
-            executeUpdate(query);
-        }catch(SQLException ignored){}
+        String query = "create table if not exists lskyblock (id varchar(20), player varchar(20), members text, pvp varchar(1))";
+        executeUpdate(query);
     }
 
 }

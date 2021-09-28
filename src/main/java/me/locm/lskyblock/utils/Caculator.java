@@ -12,7 +12,7 @@ public class Caculator {
     }
 
     public static Position getEndPosById(int id){
-        return getDefaultSpawn(id).add(75, 0, 75);
+        return getDefaultSpawn(id).add(+75, 0, +75);
     }
 
     public static Position getDefaultSpawn(int is){

@@ -12,7 +12,7 @@ import me.locm.lskyblock.skyblock.Island;
 import java.sql.SQLException;
 
 
-public class SkyBlockAPI { //TODO
+public class SkyBlockAPI {
 
     public static boolean hasIsland(Player player){
         return new SQLiteProvider().hasIsland(player.getName());

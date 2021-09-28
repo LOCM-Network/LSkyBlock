@@ -6,10 +6,7 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.block.ItemFrameDropItemEvent;
-import cn.nukkit.event.player.PlayerBucketEmptyEvent;
-import cn.nukkit.event.player.PlayerBucketFillEvent;
-import cn.nukkit.event.player.PlayerInteractEvent;
-import cn.nukkit.event.player.PlayerLocallyInitializedEvent;
+import cn.nukkit.event.player.*;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.TextFormat;
 import me.locm.lskyblock.api.SkyBlockAPI;
@@ -19,6 +16,7 @@ import me.locm.lskyblock.utils.Utils;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
 
 public class EventListener implements Listener {
 
@@ -42,15 +40,20 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onBreak(BlockBreakEvent event){
+        event.setDropExp(0);
         Player player = event.getPlayer();
         if(player.getLevel().getName().startsWith("skyblock")){
             Island island = SkyBlockAPI.getIslandByPos(event.getBlock());
-            if(island != null && island.isMember(player)){
-                if(island.getOwner().equals(player.getName())) return;
-                event.setCancelled(!player.isOp());
+            if(island != null && !island.isMember(player)){
+                if(island.getOwner().equals(player.getName().toLowerCase()) || player.isOp()) return;
+                event.setCancelled(true);
             }
         }
-        event.setCancelled(!player.isOp());
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent event){
+        event.setKeepInventory(true);
     }
 
     @EventHandler
@@ -58,12 +61,11 @@ public class EventListener implements Listener {
         Player player = event.getPlayer();
         if(player.getLevel().getName().startsWith("skyblock")){
             Island island = SkyBlockAPI.getIslandByPos(event.getBlock());
-            if(island != null && island.isMember(player)){
-                if(island.getOwner().equals(player.getName())) return;
-                event.setCancelled(!player.isOp());
+            if(island != null && !island.isMember(player)){
+                if(island.getOwner().equals(player.getName().toLowerCase()) || player.isOp()) return;
+                event.setCancelled(true);
             }
         }
-        event.setCancelled(!player.isOp());
     }
 
     @EventHandler
@@ -71,12 +73,11 @@ public class EventListener implements Listener {
         Player player = event.getPlayer();
         if(player.getLevel().getName().startsWith("skyblock")){
             Island island = SkyBlockAPI.getIslandByPos(event.getBlock());
-            if(island != null && island.isMember(player)){
-                if(island.getOwner().equals(player.getName())) return;
-                event.setCancelled(!player.isOp());
+            if(island != null && !island.isMember(player)){
+                if(island.getOwner().equals(player.getName().toLowerCase()) || player.isOp()) return;
+                event.setCancelled(true);
             }
         }
-        event.setCancelled(!player.isOp());
     }
 
     @EventHandler
@@ -84,12 +85,11 @@ public class EventListener implements Listener {
         Player player = event.getPlayer();
         if(player.getLevel().getName().startsWith("skyblock")){
             Island island = SkyBlockAPI.getIslandByPos(event.getBlockClicked());
-            if(island != null && island.isMember(player)){
-                if(island.getOwner().equals(player.getName())) return;
-                event.setCancelled(!player.isOp());
+            if(island != null && !island.isMember(player)){
+                if(island.getOwner().equals(player.getName().toLowerCase()) || player.isOp()) return;
+                event.setCancelled(true);
             }
         }
-        event.setCancelled(!player.isOp());
     }
 
     @EventHandler
@@ -97,11 +97,10 @@ public class EventListener implements Listener {
         Player player = event.getPlayer();
         if(player.getLevel().getName().startsWith("skyblock")){
             Island island = SkyBlockAPI.getIslandByPos(event.getBlockClicked());
-            if(island != null && island.isMember(player)){
-                if(island.getOwner().equals(player.getName())) return;
+            if(island != null && !island.isMember(player)){
+                if(island.getOwner().equals(player.getName().toLowerCase()) || player.isOp()) return;
             }
         }
-        event.setCancelled(!player.isOp());
     }
 
     @EventHandler
@@ -113,7 +112,6 @@ public class EventListener implements Listener {
                 if(island.getOwner().equals(player.getName())) return;
             }
         }
-        event.setCancelled(!player.isOp());
     }
 
 }

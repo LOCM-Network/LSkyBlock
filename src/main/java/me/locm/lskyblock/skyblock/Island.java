@@ -27,16 +27,27 @@ public class Island {
         return pvp;
     }
 
-    public void addMember(Player player){
-        new SQLiteProvider().addMember(this, player.getName());
+    public void togglePvp(){
+        setPvp(!getPvp());
+        new SQLiteProvider().updateIsland(this);
     }
 
-    public void removeMember(Player player){
-        new SQLiteProvider().removeMember(this, player.getName());
+    public void addMember(String player){
+        if(!this.members.contains(player.toLowerCase())){
+            this.members.add(player.toLowerCase());
+            new SQLiteProvider().updateIsland(this);
+        }
+    }
+
+    public void removeMember(String player){
+        if(this.members.contains(player.toLowerCase())){
+            this.members.remove(player.toLowerCase());
+            new SQLiteProvider().updateIsland(this);
+        }
     }
 
     public boolean isMember(Player player){
-        return members.contains(player.getName());
+        return members.contains(player.getName().toLowerCase());
     }
 
     public boolean isInside(Position pos){

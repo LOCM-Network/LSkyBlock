@@ -11,7 +11,6 @@ import me.locm.lskyblock.skyblock.Island;
 
 import java.sql.SQLException;
 
-
 public class SkyBlockAPI {
 
     public static boolean hasIsland(Player player){
@@ -44,7 +43,7 @@ public class SkyBlockAPI {
     }
 
     public static Island getIslandByPos(Position pos){
-        for (Island island : new SQLiteProvider().getIslands()){
+        for (Island island : LSkyblock.getCached().getIslands()){
             if(island.isInside(pos)){
                 return island;
             }

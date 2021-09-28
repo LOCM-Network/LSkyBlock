@@ -67,6 +67,7 @@ public class SQLiteProvider {
         int id = island.getId();
         String owner = island.getOwner();
         List<String> members = island.getMembers();
+        System.out.println(members);
         int pvp = island.getPvp() ? 1 : 0;
         String query = "insert or replace into lskyblock(id, player, members, pvp)" +
                         " values ('"+id+"', '"+owner.toLowerCase()+"', '" + StringUtils.join(members, ",") + "', '"+ pvp +"')";
@@ -75,6 +76,7 @@ public class SQLiteProvider {
         }catch (SQLException e){
             e.printStackTrace();
         }
+
     }
 
     public static List<Island> selectAll() throws SQLException{
@@ -91,6 +93,8 @@ public class SQLiteProvider {
             island.setPvp(resultSet.getString("pvp").equals("1"));
             islands.add(island);
         }
+        resultSet.close();
+        connection.close();
         return islands;
     }
 
@@ -112,6 +116,8 @@ public class SQLiteProvider {
             list.put("members", resultSet.getString("members"));
             list.put("pvp", resultSet.getString("pvp"));
         }
+        resultSet.close();
+        connection.close();
         return list;
     }
 
@@ -121,6 +127,7 @@ public class SQLiteProvider {
         if (connection == null) return "";
         ResultSet resultSet = connection.createStatement().executeQuery(query);
         if (resultSet == null) return null;
+        connection.close();
         return resultSet.getString(component);
     }
 
@@ -128,6 +135,9 @@ public class SQLiteProvider {
         Connection connection = connectToSQLite();
         if (connection == null) return;
         connection.createStatement().executeUpdate(query);
+        try {
+            connection.close();
+        } catch (SQLException ignored) {}
     }
 
     public static void create() throws SQLException {

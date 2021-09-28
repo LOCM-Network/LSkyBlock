@@ -21,13 +21,15 @@ import java.util.Locale;
 public class EventListener implements Listener {
 
     @EventHandler
-    public void onIslandCreate(PlayerCreateIslandEvent event){
+    public void onIslandCreate(PlayerCreateIslandEvent event) throws SQLException {
         Player player = event.getPlayer();
         List<Item> items = Utils.getIslandItem();
         for(Item item : items){
             player.getInventory().addItem(item);
         }
         player.sendMessage(TextFormat.colorize("Do khoi dau da duoc them vao tui"));
+        Island island = SkyBlockAPI.getIsland(player);
+        LSkyblock.getCached().putIsland(player.getName(), island);
     }
 
     @EventHandler

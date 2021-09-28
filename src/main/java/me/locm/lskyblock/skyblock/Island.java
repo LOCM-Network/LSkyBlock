@@ -35,14 +35,12 @@ public class Island {
     public void addMember(String player){
         if(!this.members.contains(player.toLowerCase())){
             this.members.add(player.toLowerCase());
-            new SQLiteProvider().updateIsland(this);
         }
     }
 
     public void removeMember(String player){
         if(this.members.contains(player.toLowerCase())){
             this.members.remove(player.toLowerCase());
-            new SQLiteProvider().updateIsland(this);
         }
     }
 

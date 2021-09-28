@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.TextFormat;
+import me.locm.lskyblock.LSkyblock;
 import me.locm.lskyblock.api.SkyBlockAPI;
 import me.locm.lskyblock.provider.SQLiteProvider;
 import me.locm.lskyblock.skyblock.Island;
@@ -73,7 +74,7 @@ public class FormStorage {
     }
 
     public static void sendManagerForm(Player player) throws SQLException {
-        Island island = new SQLiteProvider().getIsland(player.getName());
+        Island island = LSkyblock.getCached().getIsland(player.getName());
         SimpleForm form = new SimpleForm(TextFormat.colorize("quan ly dao"));
         form.addButton(TextFormat.colorize("Thong tin dao"), (p, button) -> {
             try {
@@ -95,7 +96,7 @@ public class FormStorage {
     }
 
     public static void sendInfoForm(Player player) throws SQLException {
-        Island island = new SQLiteProvider().getIsland(player.getName());
+        Island island = LSkyblock.getCached().getIsland(player.getName());
         CustomForm form = new CustomForm(TextFormat.colorize("Information"));
         form.addElement(TextFormat.colorize("ID: " + island.getId()));
         form.addElement(TextFormat.colorize("Dao cua nguoi choi: " + player.getName()));
@@ -112,25 +113,21 @@ public class FormStorage {
         form.setHandler((p, respone) -> {
             boolean add = respone.getToggle("add").getValue();
             String target = respone.getInput("target").getValue();
-            try {
-                Island island = new SQLiteProvider().getIsland(player.getName());
-                Player targetp = Server.getInstance().getPlayerExact(target);
-                if(add){
-                    if(targetp != null){
-                        assert island != null;
-                        island.addMember(targetp.getName());
-                        sendNotice(player, "da them " + targetp.getName() + " vao dao");
-                    }
-                }else{
-                    if(targetp != null){
-                        assert island != null;
-                        island.removeMember(targetp.getName());
-                        sendNotice(player, "da xoa " + targetp.getName() + " ra khoi dao");
-                    }
+            Island island = LSkyblock.getCached().getIsland(player.getName());
+            Player targetp = Server.getInstance().getPlayerExact(target);
+            if(add){
+                if(targetp != null){
+                    assert island != null;
+                    island.addMember(targetp.getName());
+                    sendNotice(player, "da them " + targetp.getName() + " vao dao");
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }catch (NullPointerException ignored){}
+            }else{
+                if(targetp != null){
+                    assert island != null;
+                    island.removeMember(targetp.getName());
+                    sendNotice(player, "da xoa " + targetp.getName() + " ra khoi dao");
+                }
+            }
         });
         form.setNoneHandler((p) -> getStartForm().send(player));
         form.send(player);
